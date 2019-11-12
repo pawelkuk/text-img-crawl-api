@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  read-websites-api:
+    build: .
+    volumes:
+      - .:/usr/src/app
