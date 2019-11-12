@@ -13,7 +13,7 @@
  `GET /read-text`
 
  **Arguments**
- - `"url-to-website":string` url to the requested website
+ - `"url":string` url to the requested website
 
  **Response**
 
@@ -36,11 +36,11 @@
  `GET /read-images`
 
  **Arguments**
- - `"url-to-website":string` url to the requested website
+ - `"url":string` url to the requested website
 
  **Response**
 
-- `200 OK` on success
+- `200 OK`on success
 
 ```json
     {
