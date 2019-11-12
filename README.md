@@ -6,7 +6,10 @@
 
 **Definition**
 
- `GET /read-text/<url-to-website>`
+ `GET /read-text`
+
+ **Arguments**
+ - `"url-to-website":string` url to the requested website
 
  **Response**
 
@@ -14,6 +17,7 @@
 
 ```json
     {
+        "task-id": 1,
         "requested-url": "https://www.example.com",
         "text": "text content of the requested website without tags"
     }
@@ -23,7 +27,10 @@
 
 **Definition**
 
- `GET /read-images/<url-to-website>`
+ `GET /read-images`
+
+ **Arguments**
+ - `"url-to-website":string` url to the requested website
 
  **Response**
 
@@ -31,6 +38,7 @@
 
 ```json
     {
+        "task-id": 1,
         "requested-url": "https://www.example.com",
         "images": {
             "img_1.jpeg",
@@ -38,5 +46,23 @@
             ..., 
             "img_n.jpeg"
         }
+    }
+```
+
+**Definition**
+
+ `GET /status`
+
+ **Arguments**
+ - `task-id:int` the id of the requested task
+
+ **Response**
+
+- `200 OK` on success
+
+```json
+    {
+        "task-id": 1,
+        "status": "RUNNING|PENDING|ERROR|CANCELLED"
     }
 ```
