@@ -1,8 +1,12 @@
 # Internet Crawler for Text and Images
 
+&nbsp;
+
 ## Usage
 
- ### Get text from a website (and store it in a database)
+&nbsp;
+
+### Get text from a website (and store it in a database)
 
 **Definition**
 
@@ -22,6 +26,8 @@
         "text": "text content of the requested website without tags"
     }
 ```
+
+&nbsp;
 
 ### Get images from a website (and store it in a database)
 
@@ -48,6 +54,10 @@
         }
     }
 ```
+
+&nbsp;
+
+### Get status of the requested task
 
 **Definition**
 
