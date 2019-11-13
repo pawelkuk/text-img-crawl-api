@@ -4,3 +4,5 @@ Flask-RESTful==0.3.7
 html2text==2019.9.26
 requests==2.22.0
 beautifulsoup4==4.8.1
+celery==4.3.0
+redis==3.3.11
