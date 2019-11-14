@@ -1,6 +1,7 @@
 import pytest
-from semantive.celery.add_resources_text import save_data
 import shelve
+
+from semantive.celery.add_resources_text import save_data
 
 
 def test_save_data_empty_db_returns_proper_structure_for_text_data(tmp_path):
