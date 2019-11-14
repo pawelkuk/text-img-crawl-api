@@ -2,11 +2,10 @@ from os.path import dirname
 import markdown
 from flask import Flask
 from flask_restful import Api
-from semantive.service.website_text_reader import WebsiteTextReader
-from semantive.service.website_images_reader import WebsiteImageReader
-from semantive.service.task_status import TaskStatus
 from semantive.celery.celery_flask import make_celery
-
+from semantive.celery.add_resources_text import add_resource_text_reader
+from semantive.celery.add_resources_images import add_resources_image_reader
+from semantive.service.add_resources_status import add_resource_status
 
 app = Flask(__name__)
 app.config.update(
@@ -36,6 +35,6 @@ def reverse(string):
     return string[::-1]
 
 
-api.add_resource(WebsiteTextReader, '/read-text')
-api.add_resource(WebsiteImageReader, '/read-images')
-api.add_resource(TaskStatus, '/status')
+add_resource_text_reader('/read-text', api, celery)
+add_resources_image_reader('/read-images', api, celery)
+add_resource_status('/status', api, celery)
