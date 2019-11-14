@@ -1,7 +1,10 @@
 from os.path import dirname
 import markdown
 from flask import Flask
+from flask import g
+import shelve
 from flask_restful import Api
+from werkzeug.local import LocalProxy
 from semantive.celery.celery_flask import make_celery
 from semantive.celery.add_resources_text import add_resource_text_reader
 from semantive.celery.add_resources_images import add_resources_image_reader
@@ -14,6 +17,23 @@ app.config.update(
 )
 api = Api(app)
 celery = make_celery(app)
+
+
+def get_db():
+    if 'db' not in g:
+        g.db = shelve.open('data.db')
+
+    return g.db
+
+
+def close_db(e=None):
+    db = g.pop('db', None)
+
+    if db is not None:
+        db.close()
+
+
+db = LocalProxy(get_db)
 
 
 @app.route('/')
@@ -35,6 +55,6 @@ def reverse(string):
     return string[::-1]
 
 
-add_resource_text_reader('/read-text', api, celery)
-add_resources_image_reader('/read-images', api, celery)
+add_resource_text_reader('/read-text', api, celery, db)
+add_resources_image_reader('/read-images', api, celery, db)
 add_resource_status('/status', api, celery)

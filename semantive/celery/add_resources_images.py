@@ -3,9 +3,10 @@ from flask_restful import reqparse
 from bs4 import BeautifulSoup
 import requests
 import re
+from .add_resources_text import save_data
 
 
-def add_resources_image_reader(name, api, celery):
+def add_resources_image_reader(name, api, celery, db):
     @celery.task(name='celery.get_images_and_save')
     def get_images_and_save(args):
         page = requests.get(args['url'])
@@ -19,6 +20,9 @@ def add_resources_image_reader(name, api, celery):
             image_src.append(image['src'])
 
         urls = src_to_urls(image_src, page)
+
+        save_data(db, 'images', page.url, urls)
+
         return urls
 
     class WebsiteImageReader(Resource):
@@ -48,6 +52,7 @@ def add_resources_image_reader(name, api, celery):
                 url = ''.join([protocol, website])
             url = ''.join([url, src])
             urls.append(url)
+
         return urls
 
     api.add_resource(WebsiteImageReader, name)

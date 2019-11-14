@@ -4,7 +4,7 @@ import requests
 import html2text
 
 
-def add_resource_text_reader(name, api, celery):
+def add_resource_text_reader(name, api, celery, db):
 
     @celery.task(name='celery.get_text_and_save')
     def get_text_and_save(args):
@@ -12,6 +12,9 @@ def add_resource_text_reader(name, api, celery):
         h = html2text.HTML2Text()
         h.ignore_links = True
         text = h.handle(page.text).replace('\n', ' ').strip()
+
+        save_data(db, 'text', page.url, text)
+
         return text
 
     class WebsiteTextReader(Resource):
@@ -27,3 +30,14 @@ def add_resource_text_reader(name, api, celery):
 
             return {"task-id": task.id, }
     api.add_resource(WebsiteTextReader, name)
+
+
+def save_data(db, dict_key, url, data_to_store):
+    if dict_key not in db:
+        db[dict_key] = []
+    data = db[dict_key]
+    data.append({
+        'url': url,
+        'data': data_to_store,
+    })
+    db[dict_key] = data
