@@ -9,6 +9,7 @@ from semantive.celery.celery_flask import make_celery
 from semantive.celery.add_resources_text import add_resource_text_reader
 from semantive.celery.add_resources_images import add_resources_image_reader
 from semantive.service.add_resources_status import add_resource_status
+from semantive.celery.add_resources_save import add_resource_save
 
 app = Flask(__name__)
 app.config.update(
@@ -58,3 +59,4 @@ def reverse(string):
 add_resource_text_reader('/read-text', api, celery, db)
 add_resources_image_reader('/read-images', api, celery, db)
 add_resource_status('/status', api, celery)
+add_resource_save('/save', api, celery, db)
