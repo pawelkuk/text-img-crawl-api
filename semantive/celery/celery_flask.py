@@ -1,10 +1,5 @@
 from celery import Celery
 
-# app = Celery('tasks', broker='redis://redis:6379/0')
-# app = Celery('tasks',
-#              broker='redis://localhost:6379/0',
-#              backend="db+postgresql://pawkuk:pawel123@localhost/celery")
-
 
 def make_celery(app):
     celery = Celery(app.import_name,

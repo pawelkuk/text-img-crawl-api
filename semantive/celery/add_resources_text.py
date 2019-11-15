@@ -5,6 +5,7 @@ import html2text
 
 
 def add_resource_text_reader(name, api, celery, db):
+    """Func. which groups code associated with reading text from websites."""
 
     @celery.task(name='celery.get_text_and_save')
     def get_text_and_save(args):
@@ -18,6 +19,7 @@ def add_resource_text_reader(name, api, celery, db):
         return text
 
     class WebsiteTextReader(Resource):
+        """Class to be added to api's resources."""
         def post(self):
             parser = reqparse.RequestParser()
             parser.add_argument('url',
@@ -28,11 +30,24 @@ def add_resource_text_reader(name, api, celery, db):
 
             task = get_text_and_save.delay(args)
 
-            return {"task-id": task.id, }
+            return {
+                "task-id": task.id,
+                "requested-url": args['url'],
+                }
     api.add_resource(WebsiteTextReader, name)
 
 
 def save_data(db, dict_key, url, data_to_store):
+    """
+    Given url and data stores it in a shelve object.
+
+    Keyword arguments:
+    db -- shelve object
+    dict_key -- the key data has to be append under
+    url -- for keeping track from what website is the data comming from
+    data_to_store -- has to be serializable (potential security issue
+    because shelve uses the pickle module)
+    """
     if dict_key not in db:
         db[dict_key] = []
     data = db[dict_key]

@@ -4,20 +4,22 @@ import csv
 
 
 def add_resource_save(name, api, celery, db):
+    """Function which groups code associated with saving data."""
+
     @celery.task(name='celery.save')
     def save(args):
         if args['content'] == 'images':
             img_dict = db['images']
             data = []
             for site in img_dict:
-                for image in site['stored']:
+                for image in site['data']:
                     data.append([site['url'], image])
 
         elif args['content'] == 'text':
             text_dict = db['text']
             data = []
             for line in text_dict:
-                data.append([line['url'], line['stored']])
+                data.append([line['url'], line['data']])
         else:
             return {'STATUS': 'FAILURE', }
 
@@ -31,6 +33,8 @@ def add_resource_save(name, api, celery, db):
             }
 
     class SaveContent(Resource):
+        """Class to be added to api's resources."""
+
         def post(self):
             parser = reqparse.RequestParser()
             parser.add_argument('content',
@@ -40,5 +44,8 @@ def add_resource_save(name, api, celery, db):
             args = parser.parse_args()
             task = save.delay(args)
 
-            return {"task-id": task.id, }
+            return {
+                "task-id": task.id,
+                'requested-content': args['content']
+                }
     api.add_resource(SaveContent, name)

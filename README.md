@@ -75,7 +75,7 @@
 ```json
     {
         "task-id": <id>,
-        "status": "SUCCESS|RUNNING|PENDING|FAILURE|CANCELLED"
+        "status": "SUCCESS|RUNNING|PENDING|FAILURE"
     }
 ```
 

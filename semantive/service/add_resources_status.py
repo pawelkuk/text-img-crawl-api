@@ -5,6 +5,8 @@ from celery.result import AsyncResult
 
 def add_resource_status(name, api, celery):
     class TaskStatus(Resource):
+        """Class to be added to api's resources."""
+
         def post(self):
             parser = reqparse.RequestParser()
             parser.add_argument('task-id',

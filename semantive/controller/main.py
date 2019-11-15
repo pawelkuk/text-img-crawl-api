@@ -45,17 +45,7 @@ def index():
         return markdown.markdown(content)
 
 
-@app.route('/process/<name>')
-def process(name):
-    reverse.delay(name)
-    return 'I sent an async request!'
-
-
-@celery.task(name='celery_example.reverse')
-def reverse(string):
-    return string[::-1]
-
-
+# Place to specify rest api endpoints. Wrapped for better readability.
 add_resource_text_reader('/read-text', api, celery, db)
 add_resources_image_reader('/read-images', api, celery, db)
 add_resource_status('/status', api, celery)

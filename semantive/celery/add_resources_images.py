@@ -7,6 +7,8 @@ from .add_resources_text import save_data
 
 
 def add_resources_image_reader(name, api, celery, db):
+    """Func. which groups code associated with reading imgs from websites."""
+
     @celery.task(name='celery.get_images_and_save')
     def get_images_and_save(args):
         page = requests.get(args['url'])
@@ -26,6 +28,8 @@ def add_resources_image_reader(name, api, celery, db):
         return urls
 
     class WebsiteImageReader(Resource):
+        """Class to be added to api's resources."""
+
         def post(self):
             parser = reqparse.RequestParser()
             parser.add_argument('url',
@@ -35,9 +39,19 @@ def add_resources_image_reader(name, api, celery, db):
             args = parser.parse_args()
 
             task = get_images_and_save.delay(args)
-            return {'task-id': task.id, }
+            return {
+                'task-id': task.id,
+                "requested-url": args['url'],
+                }
 
     def src_to_urls(image_src, page):
+        """
+        Given src values from html data converts it into valid urls.
+
+        Keyword arguments:
+        image_src -- list of src values of images
+        page -- the page src values are comming from
+        """
         urls = []
         protocol = 'https://'
         website = page.url.split('/')[2]
