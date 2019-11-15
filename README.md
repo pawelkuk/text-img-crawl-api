@@ -6,11 +6,11 @@
 
 &nbsp;
 
-### Get text from a website (and store it in a database)
+### Get text from a website (and store it in shelve file)
 
 **Definition**
 
- `GET /read-text`
+ `POST /read-text`
 
  **Arguments**
  - `"url":string` url to the requested website
@@ -21,19 +21,23 @@
 
 ```json
     {
-        "task-id": 1,
-        "requested-url": "https://www.example.com",
-        "text": "text content of the requested website without tags"
+        "task-id": <id>,
+        "requested-url": "https://www.example.com"
     }
 ```
 
+**Usage**
+
+`curl localhost:5000/read-text -d "url=https://www.example.com" -X POST`
+
+
 &nbsp;
 
-### Get images from a website (and store it in a database)
+### Get images from a website (and store it in shelve file)
 
 **Definition**
 
- `GET /read-images`
+ `POST /read-images`
 
  **Arguments**
  - `"url":string` url to the requested website
@@ -44,16 +48,14 @@
 
 ```json
     {
-        "task-id": 1,
-        "requested-url": "https://www.example.com",
-        "images": {
-            "img_1.jpeg",
-            "img_2.jpeg", 
-            ..., 
-            "img_n.jpeg"
-        }
+        "task-id": <id>,
+        "requested-url": "https://www.example.com"
     }
 ```
+
+**Usage**
+
+`curl localhost:5000/read-images -d "url=https://www.allegro.pl" -X POST`
 
 &nbsp;
 
@@ -61,10 +63,10 @@
 
 **Definition**
 
- `GET /status`
+ `POST /status`
 
  **Arguments**
- - `task-id:int` the id of the requested task
+ - `task-id:str` the id of the requested task
 
  **Response**
 
@@ -72,7 +74,37 @@
 
 ```json
     {
-        "task-id": 1,
-        "status": "RUNNING|PENDING|ERROR|CANCELLED"
+        "task-id": <id>,
+        "status": "SUCCESS|RUNNING|PENDING|FAILURE|CANCELLED"
     }
 ```
+
+**Usage**
+
+`curl localhost:5000/status -d "task-id=<id>" -X POST`
+
+&nbsp;
+
+### Save downloaded text/image data
+
+**Definition**
+
+`POST /save`
+
+**Arguments**
+ - `content:str` type of content to download, supports `"text"|"images"`
+
+ **Response**
+
+- `200 OK` on success
+
+```json
+    {
+        "task-id": <id>,
+        "requested-content": "text|images"
+    }
+```
+
+**Usage**
+
+`curl localhost:5000/save -d "content=text" -X POST`
