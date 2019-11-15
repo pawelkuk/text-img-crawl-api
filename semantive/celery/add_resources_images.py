@@ -21,7 +21,7 @@ def add_resources_image_reader(name, api, celery, db):
         for image in images:
             image_src.append(image['src'])
 
-        urls = src_to_urls(image_src, page)
+        urls = src_to_urls(image_src, page.url)
 
         save_data(db, 'images', page.url, urls)
 
@@ -44,29 +44,30 @@ def add_resources_image_reader(name, api, celery, db):
                 "requested-url": args['url'],
                 }
 
-    def src_to_urls(image_src, page):
-        """
-        Given src values from html data converts it into valid urls.
 
-        Keyword arguments:
-        image_src -- list of src values of images
-        page -- the page src values are comming from
-        """
-        urls = []
-        protocol = 'https://'
-        website = page.url.split('/')[2]
-        for src in image_src:
-            if '//' == src[0:2]:
-                urls.append(''.join(['https:', src]))
-                continue
-            if 'http://' in src or 'https://' in src:
-                urls.append(src)
-                continue
-            if website not in src:
-                url = ''.join([protocol, website])
-            url = ''.join([url, src])
-            urls.append(url)
+def src_to_urls(image_src, url):
+    """
+    Given src values from html data converts it into valid urls.
 
-        return urls
+    Keyword arguments:
+    image_src -- list of src values of images
+    url -- the url of page src values are comming from
+    """
+    urls = []
+    protocol = 'https://'
+    website = url.split('/')[2]
+    for src in image_src:
+        if '//' == src[0:2]:
+            urls.append(''.join(['https:', src]))
+            continue
+        if 'http://' in src or 'https://' in src:
+            urls.append(src)
+            continue
+        if website not in src:
+            url = ''.join([protocol, website])
+        url = ''.join([url, src])
+        urls.append(url)
+
+    return urls
 
     api.add_resource(WebsiteImageReader, name)
