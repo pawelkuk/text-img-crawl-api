@@ -9,6 +9,10 @@ services:
       - .:/usr/src/app
     ports:
       - 5000:80
+    links:
+      - celery
+      - celery-beat
+      - redis
   celery:
     build: .
     command: celery -A semantive.controller.main.celery worker -l info
