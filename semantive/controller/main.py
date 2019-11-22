@@ -4,6 +4,8 @@ from flask import Flask
 from flask import g
 import shelve
 from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from werkzeug.local import LocalProxy
 from semantive.celery.celery_flask import make_celery
 from semantive.celery.add_resources_text import add_resource_text_reader
@@ -17,7 +19,16 @@ app.config.update(
     CELERY_RESULT_BACKEND='redis://redis:6379'
 )
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@db/postgres_db'
+db2 = SQLAlchemy(app)
+# migrate = Migrate(app, db2)
+
 celery = make_celery(app)
+
+from semantive.model.models import Text, Image
+db2.create_all()
+
+# import ipdb; ipdb.set_trace()
 
 
 def get_db():
