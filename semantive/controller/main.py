@@ -5,7 +5,6 @@ from flask import g
 import shelve
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from werkzeug.local import LocalProxy
 from semantive.celery.celery_flask import make_celery
 from semantive.celery.add_resources_text import add_resource_text_reader
@@ -19,13 +18,11 @@ app.config.update(
     CELERY_RESULT_BACKEND='redis://redis:6379'
 )
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@db/postgres_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql' \
+                                        '://admin:admin@db/postgres_db'
 db2 = SQLAlchemy(app)
-# migrate = Migrate(app, db2)
 
-celery = make_celery(app)
-
-from semantive.model.models import Text, Image
+from semantive.model.models import Text, Image # noqa
 db2.create_all()
 
 # import ipdb; ipdb.set_trace()
@@ -34,18 +31,17 @@ db2.create_all()
 def get_db():
     if 'db' not in g:
         g.db = shelve.open('data.db')
-
     return g.db
 
 
 def close_db(e=None):
     db = g.pop('db', None)
-
     if db is not None:
         db.close()
 
 
 db = LocalProxy(get_db)
+celery = make_celery(app)
 
 
 @app.route('/')
