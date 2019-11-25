@@ -1,4 +1,3 @@
-import pytest
 import shelve
 
 from semantive.celery.add_resources_text import save_data

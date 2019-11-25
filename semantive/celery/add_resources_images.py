@@ -70,4 +70,4 @@ def src_to_urls(image_src, url):
 
     return urls
 
-    api.add_resource(WebsiteImageReader, name)
+    api.add_resource(WebsiteImageReader, name) # noqa

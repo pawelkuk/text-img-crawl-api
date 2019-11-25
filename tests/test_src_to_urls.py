@@ -1,4 +1,3 @@
-import pytest
 from semantive.celery.add_resources_images import src_to_urls
 
 

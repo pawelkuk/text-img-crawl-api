@@ -11,3 +11,4 @@ ipdb==0.12.2
 Flask-SQLAlchemy==2.4.1
 psycopg2==2.8.4
 Flask-Migrate==2.5.2
+flake8==3.7.9
